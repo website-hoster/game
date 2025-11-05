@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GameZone Arcade (Offline)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <h1>GameZone Arcade (Offline)</h1>
+      <p class="sub">All games run locally — no external assets</p>
+    </div>
+    <div class="hdr-actions">
+      <button id="adminBtn" class="btn ghost" onclick="goAdmin()">Admin</button>
+      <button id="logoutBtn" class="btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="gallery" class="games-grid" aria-live="polite"></section>
+  </main>
+
+  <footer class="footer">© 2025 GameZone • Local games bundle</footer>
+
+  <script src="games.js"></script>
+  <script>
+    // require login
+    const role = localStorage.getItem('role');
+    if (!role) {
+      location.href = 'login.html';
+    }
+    function logout(){ localStorage.clear(); location.href='login.html'; }
+    function goAdmin(){ if(localStorage.getItem('role')==='admin') location.href='admin.html'; else alert('Admin only'); }
+  </script>
+</body>
+</html>

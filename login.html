@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"/><title>Login — GameZone</title><meta name="viewport" content="width=device-width,initial-scale=1" /><link rel="stylesheet" href="style.css" /></head>
+<body>
+  <div class="center-abs">
+    <div class="login-box">
+      <h2>GameZone Login</h2>
+      <input id="u" class="input" placeholder="username" autocomplete="off" />
+      <input id="p" type="password" class="input" placeholder="password" autocomplete="off" />
+      <div style="display:flex;gap:8px">
+        <button class="play" onclick="doLogin()">Login</button>
+        <button class="info" onclick="demo()">Demo</button>
+      </div>
+      <p class="small" style="margin-top:8px">Admins: gest3956 / P1cklesC@t • User: gaming / gamingforever</p>
+      <p id="m" class="small"></p>
+    </div>
+  </div>
+<script>
+function doLogin(){
+  const u=document.getElementById('u').value.trim();
+  const p=document.getElementById('p').value.trim();
+  const m=document.getElementById('m');
+  if(u==='gest3956' && p==='P1cklesC@t'){ localStorage.setItem('role','admin'); location.href='admin.html'; return; }
+  if(u==='gaming' && p==='gamingforever'){ localStorage.setItem('role','user'); location.href='index.html'; return; }
+  m.textContent='Invalid credentials';
+}
+function demo(){ document.getElementById('u').value='gaming'; document.getElementById('p').value='gamingforever'; }
+</script>
+</body>
+</html>

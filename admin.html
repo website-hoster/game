@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"/><title>Admin — GameZone</title><meta name="viewport" content="width=device-width,initial-scale=1" /><link rel="stylesheet" href="style.css" /></head>
+<body>
+  <header class="header"><div class="brand"><h1>Admin Panel</h1><p class="sub">gest3956</p></div><div class="hdr-actions"><button class="btn ghost" onclick="back()">Back</button><button class="btn" onclick="logout()">Logout</button></div></header>
+  <main class="container">
+    <section class="card">
+      <h3>User Management</h3>
+      <p class="small">Add users (stored in browser localStorage as demo).</p>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <input id="newu" class="input" placeholder="username"/>
+        <input id="newp" class="input" placeholder="password"/>
+        <button class="play" onclick="addUser()">Add</button>
+      </div>
+      <div style="margin-top:12px">
+        <button class="info" onclick="exportUsers()">Export users.json</button>
+        <input id="importFile" type="file" accept=".json" style="display:none" onchange="importUsers(event)"/>
+        <button class="info" onclick="document.getElementById('importFile').click()">Import users.json</button>
+      </div>
+    </section>
+    <section class="card" id="usersCard" style="margin-top:18px">
+      <h3>Saved Users</h3>
+      <div id="usersList" class="small"></div>
+    </section>
+  </main>
+<script>
+if(localStorage.getItem('role')!=='admin') location.href='login.html';
+function getUsers(){ return JSON.parse(localStorage.getItem('users')||'[]'); }
+function saveUsers(u){ localStorage.setItem('users', JSON.stringify(u)); render(); }
+function addUser(){
+  const name=document.getElementById('newu').value.trim();
+  const pass=document.getElementById('newp').value.trim();
+  if(!name||!pass){ alert('enter both'); return; }
+  const users=getUsers();
+  users.push({name,pass});
+  saveUsers(users);
+  document.getElementById('newu').value=''; document.getElementById('newp').value='';
+}
+function render(){
+  const list=getUsers();
+  const out=document.getElementById('usersList');
+  if(!list.length) out.textContent='No users saved.';
+  else out.innerHTML = list.map((u,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;margin:6px 0"><div>${u.name}</div><div><button class="info" onclick="remove(${i})">Remove</button></div></div>`).join('');
+}
+function remove(i){ const us=getUsers(); us.splice(i,1); saveUsers(us); }
+function exportUsers(){
+  const data=JSON.stringify(getUsers(),null,2);
+  const blob=new Blob([data],{type:'application/json'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='users.json'; a.click(); URL.revokeObjectURL(url);
+}
+function importUsers(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader(); r.onload = ()=>{ try{ const parsed=JSON.parse(r.result); if(!Array.isArray(parsed)) throw 'bad'; localStorage.setItem('users', JSON.stringify(parsed)); render(); alert('imported'); }catch(err){ alert('invalid file'); } }
+  r.readAsText(f);
+}
+function logout(){ localStorage.clear(); location.href='login.html'; }
+function back(){ location.href='index.html'; }
+render();
+</script>
+</body>
+</html>
