@@ -2,46 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login | GameZone</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .login-box {
+      width: 320px;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      padding: 2em;
+      border-radius: 15px;
+      text-align: center;
+      margin: auto;
+      margin-top: 15vh;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 0.8em;
+      margin: 0.5em 0;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 0.8em;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .login-box button:hover {
+      background: white;
+    }
+  </style>
 </head>
-<body class="login-body">
+<body>
   <div class="login-box">
     <h2>🎮 GameZone Login</h2>
-    <input type="text" id="user" placeholder="Username" autocomplete="off" />
-    <div class="password-wrapper">
-      <input type="password" id="pass" placeholder="Password" />
-      <button id="togglePass">👁</button>
-    </div>
+    <input type="text" id="user" placeholder="Username" />
+    <input type="password" id="pass" placeholder="Password" />
     <button onclick="login()">Login</button>
     <p id="msg"></p>
   </div>
 
   <script>
-    const toggleBtn = document.getElementById("togglePass");
-    const passInput = document.getElementById("pass");
-    toggleBtn.onclick = () => {
-      if (passInput.type === "password") {
-        passInput.type = "text";
-        toggleBtn.textContent = "🙈";
-      } else {
-        passInput.type = "password";
-        toggleBtn.textContent = "👁";
-      }
-    };
-
     function login() {
-      const user = document.getElementById("user").value.trim();
-      const pass = document.getElementById("pass").value.trim();
-      const msg = document.getElementById("msg");
-
-      if (user === "gest3956" && pass === "P1cklesC@t") {
+      const u = user.value.trim(), p = pass.value.trim();
+      if (u === "gest3956" && p === "P1cklesC@t") {
         localStorage.setItem("role", "admin");
-        window.location.href = "admin.html";
-      } else if (user === "gaming" && pass === "gamingforever") {
+        location.href = "admin.html";
+      } else if (u === "gaming" && p === "gamingforever") {
         localStorage.setItem("role", "user");
-        window.location.href = "index.html";
+        location.href = "index.html";
       } else {
         msg.textContent = "Invalid username or password.";
       }
