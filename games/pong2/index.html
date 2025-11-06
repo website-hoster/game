@@ -1,30 +1,154 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><title>Pong 2 Player</title></head>
-<body style="margin:0;overflow:hidden;background:black">
-<canvas id="game" width="800" height="500"></canvas>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pong — GameZone</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #0a0f1d, #000);
+  }
+  canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #0c1322, #000);
+  }
+</style>
+</head>
+<body>
+<canvas id="pong"></canvas>
 <script>
-const c=document.getElementById("game"),x=c.getContext("2d");
-let p1=200,p2=200,ball={x:400,y:250,vx:4,vy:3};
-function draw(){
-  x.fillStyle="black";x.fillRect(0,0,800,500);
-  x.fillStyle="white";
-  x.fillRect(20,p1,10,100);
-  x.fillRect(770,p2,10,100);
-  x.beginPath();x.arc(ball.x,ball.y,10,0,Math.PI*2);x.fill();
+const canvas = document.getElementById("pong");
+const ctx = canvas.getContext("2d");
+
+let width, height;
+function resize() {
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
 }
-function update(){
-  ball.x+=ball.vx;ball.y+=ball.vy;
-  if(ball.y<10||ball.y>490)ball.vy*=-1;
-  if(ball.x<30&&ball.y>p1&&ball.y<p1+100)ball.vx*=-1;
-  if(ball.x>760&&ball.y>p2&&ball.y<p2+100)ball.vx*=-1;
-  if(ball.x<0||ball.x>800)ball={x:400,y:250,vx:4*(Math.random()<0.5?1:-1),vy:3};
+window.addEventListener("resize", resize);
+resize();
+
+const paddleWidth = 14;
+const paddleHeight = 120;
+const ballSize = 14;
+
+let leftY = height / 2 - paddleHeight / 2;
+let rightY = height / 2 - paddleHeight / 2;
+let ballX = width / 2;
+let ballY = height / 2;
+let ballDX = 5;
+let ballDY = 4;
+let leftScore = 0;
+let rightScore = 0;
+const keys = {};
+
+window.addEventListener("keydown", e => keys[e.key] = true);
+window.addEventListener("keyup", e => keys[e.key] = false);
+
+function drawCenterLine() {
+  ctx.strokeStyle = "#1e2a3d";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  for (let y = 0; y < height; y += 30) {
+    ctx.moveTo(width / 2, y);
+    ctx.lineTo(width / 2, y + 15);
+  }
+  ctx.stroke();
 }
-document.addEventListener("keydown",e=>{
-  if(e.key=="w")p1-=20;if(e.key=="s")p1+=20;
-  if(e.key=="ArrowUp")p2-=20;if(e.key=="ArrowDown")p2+=20;
-});
-function loop(){update();draw();requestAnimationFrame(loop);}loop();
+
+function drawPaddle(x, y, color) {
+  const gradient = ctx.createLinearGradient(x, y, x, y + paddleHeight);
+  gradient.addColorStop(0, color);
+  gradient.addColorStop(1, "#003347");
+  ctx.fillStyle = gradient;
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 10;
+  ctx.fillRect(x, y, paddleWidth, paddleHeight);
+}
+
+function drawBall() {
+  ctx.beginPath();
+  ctx.arc(ballX, ballY, ballSize, 0, Math.PI * 2);
+  const grad = ctx.createRadialGradient(ballX, ballY, 2, ballX, ballY, ballSize);
+  grad.addColorStop(0, "#fff");
+  grad.addColorStop(1, "#00eaff");
+  ctx.fillStyle = grad;
+  ctx.shadowColor = "#00eaff";
+  ctx.shadowBlur = 20;
+  ctx.fill();
+}
+
+function drawScore() {
+  ctx.font = "bold 46px 'Orbitron', sans-serif";
+  ctx.fillStyle = "#00ffff";
+  ctx.textAlign = "center";
+  ctx.fillText(`${leftScore} | ${rightScore}`, width / 2, 60);
+}
+
+function resetBall(direction) {
+  ballX = width / 2;
+  ballY = height / 2;
+  ballDX = 5 * direction;
+  ballDY = 4 * (Math.random() > 0.5 ? 1 : -1);
+}
+
+function update() {
+  if (keys["w"] && leftY > 0) leftY -= 7;
+  if (keys["s"] && leftY + paddleHeight < height) leftY += 7;
+  if (keys["ArrowUp"] && rightY > 0) rightY -= 7;
+  if (keys["ArrowDown"] && rightY + paddleHeight < height) rightY += 7;
+
+  ballX += ballDX;
+  ballY += ballDY;
+
+  if (ballY - ballSize < 0 || ballY + ballSize > height) ballDY = -ballDY;
+
+  // Left paddle
+  if (
+    ballX - ballSize < paddleWidth &&
+    ballY > leftY &&
+    ballY < leftY + paddleHeight
+  ) {
+    ballDX = Math.abs(ballDX) + 0.2;
+    ballDX = Math.min(ballDX, 14);
+  }
+
+  // Right paddle
+  if (
+    ballX + ballSize > width - paddleWidth &&
+    ballY > rightY &&
+    ballY < rightY + paddleHeight
+  ) {
+    ballDX = -Math.abs(ballDX) - 0.2;
+    ballDX = Math.max(ballDX, -14);
+  }
+
+  // Score
+  if (ballX < 0) {
+    rightScore++;
+    resetBall(1);
+  } else if (ballX > width) {
+    leftScore++;
+    resetBall(-1);
+  }
+}
+
+function loop() {
+  ctx.clearRect(0, 0, width, height);
+  drawCenterLine();
+  drawPaddle(20, leftY, "#00f5ff");
+  drawPaddle(width - paddleWidth - 20, rightY, "#00f5ff");
+  drawBall();
+  drawScore();
+  update();
+  requestAnimationFrame(loop);
+}
+loop();
 </script>
 </body>
 </html>
