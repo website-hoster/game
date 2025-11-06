@@ -1,38 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GameZone Arcade (Offline)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameZone Arcade</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="header">
-    <div class="brand">
-      <h1>GameZone Arcade (Offline)</h1>
-      <p class="sub">All games run locally — no external assets</p>
-    </div>
-    <div class="hdr-actions">
-      <button id="adminBtn" class="btn ghost" onclick="goAdmin()">Admin</button>
-      <button id="logoutBtn" class="btn" onclick="logout()">Logout</button>
-    </div>
+  <header>
+    <h1>🎮 GameZone Arcade</h1>
+    <button onclick="logout()">Logout</button>
   </header>
 
-  <main class="container">
-    <section id="gallery" class="games-grid" aria-live="polite"></section>
-  </main>
+  <div class="games-grid">
+    <div class="game-card" onclick="play('games/pong2/index.html')">
+      🕹 2 Player Pong
+    </div>
+    <div class="game-card" onclick="play('games/snake/index.html')">
+      🐍 Snake
+    </div>
+    <div class="game-card" onclick="play('games/flappy/index.html')">
+      🐦 Flappy Bird
+    </div>
+    <div class="game-card" onclick="play('games/tetris/index.html')">
+      🧱 Tetris
+    </div>
+    <div class="game-card" onclick="play('games/car/index.html')">
+      🚗 Car Racer
+    </div>
+  </div>
 
-  <footer class="footer">© 2025 GameZone • Local games bundle</footer>
+  <iframe id="game-frame"></iframe>
 
-  <script src="games.js"></script>
-  <script>
-    // require login
-    const role = localStorage.getItem('role');
-    if (!role) {
-      location.href = 'login.html';
-    }
-    function logout(){ localStorage.clear(); location.href='login.html'; }
-    function goAdmin(){ if(localStorage.getItem('role')==='admin') location.href='admin.html'; else alert('Admin only'); }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
