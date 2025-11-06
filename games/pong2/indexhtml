@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Pong 2 Player</title></head>
+<body style="margin:0;overflow:hidden;background:black">
+<canvas id="game" width="800" height="500"></canvas>
+<script>
+const c=document.getElementById("game"),x=c.getContext("2d");
+let p1=200,p2=200,ball={x:400,y:250,vx:4,vy:3};
+function draw(){
+  x.fillStyle="black";x.fillRect(0,0,800,500);
+  x.fillStyle="white";
+  x.fillRect(20,p1,10,100);
+  x.fillRect(770,p2,10,100);
+  x.beginPath();x.arc(ball.x,ball.y,10,0,Math.PI*2);x.fill();
+}
+function update(){
+  ball.x+=ball.vx;ball.y+=ball.vy;
+  if(ball.y<10||ball.y>490)ball.vy*=-1;
+  if(ball.x<30&&ball.y>p1&&ball.y<p1+100)ball.vx*=-1;
+  if(ball.x>760&&ball.y>p2&&ball.y<p2+100)ball.vx*=-1;
+  if(ball.x<0||ball.x>800)ball={x:400,y:250,vx:4*(Math.random()<0.5?1:-1),vy:3};
+}
+document.addEventListener("keydown",e=>{
+  if(e.key=="w")p1-=20;if(e.key=="s")p1+=20;
+  if(e.key=="ArrowUp")p2-=20;if(e.key=="ArrowDown")p2+=20;
+});
+function loop(){update();draw();requestAnimationFrame(loop);}loop();
+</script>
+</body>
+</html>
