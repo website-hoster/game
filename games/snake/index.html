@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Snake</title></head>
+<body style="margin:0;overflow:hidden;background:black">
+<canvas id="game" width="400" height="400"></canvas>
+<script>
+const c=document.getElementById("game"),x=c.getContext("2d");
+let pos={x:10,y:10},vel={x:0,y:0},trail=[],tail=5,apple={x:15,y:15};
+function game(){
+  pos.x+=vel.x;pos.y+=vel.y;
+  if(pos.x<0)pos.x=19;if(pos.x>19)pos.x=0;
+  if(pos.y<0)pos.y=19;if(pos.y>19)pos.y=0;
+  x.fillStyle="black";x.fillRect(0,0,400,400);
+  x.fillStyle="lime";for(let t of trail)x.fillRect(t.x*20,t.y*20,18,18);
+  trail.push({x:pos.x,y:pos.y});
+  while(trail.length>tail)trail.shift();
+  if(trail.slice(0,-1).some(t=>t.x==pos.x&&t.y==pos.y))tail=5;
+  if(pos.x==apple.x&&pos.y==apple.y){tail++;apple.x=Math.floor(Math.random()*20);apple.y=Math.floor(Math.random()*20);}
+  x.fillStyle="red";x.fillRect(apple.x*20,apple.y*20,18,18);
+}
+document.addEventListener("keydown",e=>{
+  if(e.key=="ArrowLeft")vel={x:-1,y:0};
+  if(e.key=="ArrowUp")vel={x:0,y:-1};
+  if(e.key=="ArrowRight")vel={x:1,y:0};
+  if(e.key=="ArrowDown")vel={x:0,y:1};
+});
+setInterval(game,100);
+</script>
+</body>
+</html>
