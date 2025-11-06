@@ -2,35 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>GameZone Arcade</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>🎮 GameZone Arcade</h1>
-    <button onclick="logout()">Logout</button>
+  <header class="topbar glassy">
+    <div class="logo">🎮 GameZone</div>
+    <div class="controls">
+      <input id="search" type="text" placeholder="Search games..." />
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
   </header>
 
-  <div class="games-grid">
-    <div class="game-card" onclick="play('games/pong2/index.html')">
-      🕹 2 Player Pong
+  <main class="game-gallery">
+    <div class="card" onclick="play('games/pong2/index.html')">
+      <img src="https://img.icons8.com/fluency/96/ping-pong.png" />
+      <h3>2 Player Pong</h3>
+      <p>Battle your friend with WASD + Arrow Keys</p>
     </div>
-    <div class="game-card" onclick="play('games/snake/index.html')">
-      🐍 Snake
+
+    <div class="card" onclick="play('games/snake/index.html')">
+      <img src="https://img.icons8.com/color/96/snake.png" />
+      <h3>Snake Classic</h3>
+      <p>Eat apples, grow longer, don’t crash!</p>
     </div>
-    <div class="game-card" onclick="play('games/flappy/index.html')">
-      🐦 Flappy Bird
+
+    <div class="card" onclick="play('games/flappy/index.html')">
+      <img src="https://img.icons8.com/color/96/bird.png" />
+      <h3>Flappy Bird</h3>
+      <p>Tap to fly through the pipes</p>
     </div>
-    <div class="game-card" onclick="play('games/tetris/index.html')">
-      🧱 Tetris
+
+    <div class="card" onclick="play('games/tetris/index.html')">
+      <img src="https://img.icons8.com/color/96/tetris.png" />
+      <h3>Tetris</h3>
+      <p>Stack the blocks and clear the lines</p>
     </div>
-    <div class="game-card" onclick="play('games/car/index.html')">
-      🚗 Car Racer
+
+    <div class="card" onclick="play('games/car/index.html')">
+      <img src="https://img.icons8.com/color/96/race-car.png" />
+      <h3>Car Racer</h3>
+      <p>Dodge obstacles and speed to victory</p>
     </div>
+  </main>
+
+  <div class="frame-container">
+    <iframe id="game-frame" class="game-frame"></iframe>
   </div>
 
-  <iframe id="game-frame"></iframe>
+  <footer class="footer glassy">
+    <p>© 2025 GameZone | Futuristic Arcade Experience</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
